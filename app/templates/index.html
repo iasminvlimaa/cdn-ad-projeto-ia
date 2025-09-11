@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Prêmio de Educação</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="ph-fill ph-graduation-cap"></i>
+                <span>Análise IA</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#dashboard" class="sidebar-link active"><i class="ph-fill ph-gauge"></i><span>Dashboard</span></a></li>
+                <li><a href="#analises" class="sidebar-link"><i class="ph-fill ph-chart-bar"></i><span>Análises</span></a></li>
+                <li><a href="#relatorios" class="sidebar-link"><i class="ph-fill ph-file-text"></i><span>Relatórios</span></a></li>
+                <li><a href="#configuracoes" class="sidebar-link"><i class="ph-fill ph-gear"></i><span>Configurações</span></a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div id="dashboard" class="page-content">
+                <header class="main-header">
+                    <h1>Dashboard de Análise Educacional</h1>
+                    <p>Prêmio de Educação - Instituto Alpargatas</p>
+                </header>
+                <section class="filtros-container">
+                    <div class="filtro-item">
+                        <label for="filtro-regiao">Região</label>
+                        <select id="filtro-regiao">
+                            <option value="Todas">Todas as Regiões</option>
+                        </select>
+                    </div>
+                    <div class="filtro-item">
+                        <label for="filtro-ano">Ano</label>
+                        <select id="filtro-ano">
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+                    </div>
+                </section>
+                <section class="kpi-grid">
+                    <div class="kpi-card">
+                        <h2>Média Geral (Prêmio)</h2>
+                        <p id="media-geral">-</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h2>Melhoria Anual</h2>
+                        <p id="melhoria-anual" class="positivo">+0.0%</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h2>Benchmark vs. IDEB</h2>
+                        <p id="benchmark-ideb" class="positivo">+0.0</p>
+                    </div>
+                </section>
+                <div class="dashboard-grid">
+                    <section class="chart-container">
+                        <h2>Desempenho por Região</h2>
+                        <canvas id="regiaoChart"></canvas>
+                    </section>
+                    <section class="ranking-container">
+                        <h2>🏆 Top 10 Escolas</h2>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Posição</th>
+                                        <th>Nome da Escola</th>
+                                        <th>Pontuação</th>
+                                        <th>Região</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ranking-body"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <section class="ranking-container full-width">
+                        <h2>⭐ Estudantes Destaques</h2>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Posição</th>
+                                        <th>Aluno</th>
+                                        <th>Nota Geral</th>
+                                        <th>Escola</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ranking-alunos-body"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div id="analises" class="page-content hidden">
+                <header class="main-header">
+                    <h1>Análises Detalhadas</h1>
+                </header>
+                <section class="analysis-container">
+                    <h2>Comparativo de Escolas</h2>
+                    <p>Selecione até 3 escolas para comparar seus indicadores para o ano de <span id="analise-ano-selecionado">2025</span>.</p>
+                    <div class="comparison-tool">
+                        <div class="school-selector">
+                            <label for="analise-escolas-select">Escolas Disponíveis</label>
+                            <select id="analise-escolas-select" multiple></select>
+                        </div>
+                        <div class="comparison-action">
+                             <button id="analise-comparar-btn" class="cta-button"><i class="ph-fill ph-arrows-clockwise"></i><span>Comparar</span></button>
+                        </div>
+                    </div>
+                    <div id="analise-resultado-container" class="kpi-grid"></div>
+                </section>
+                <section class="analysis-container">
+                    <h2>Evolução Histórica por Escola</h2>
+                    <p>Selecione uma escola para ver sua evolução de pontuação de 2020 a 2025.</p>
+                     <div class="filtros-container">
+                        <div class="filtro-item">
+                            <label for="analise-historico-select">Selecione uma Escola (do ano de 2025):</label>
+                            <select id="analise-historico-select"></select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="historicoChart"></canvas>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="relatorios" class="page-content hidden">
+                <header class="main-header">
+                    <h1>Relatórios e Exportação</h1>
+                </header>
+                <section class="ranking-container">
+                    <div class="relatorio-header">
+                        <h2>Relatório Completo de Escolas</h2>
+                        <button id="export-csv-btn" class="cta-button"><i class="ph-fill ph-download-simple"></i>Exportar para CSV</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="relatorio-tabela-escolas">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome da Escola</th>
+                                    <th>Região</th>
+                                    <th>Ano</th>
+                                    <th>Pontuação Prêmio</th>
+                                    <th>IDEB Público</th>
+                                </tr>
+                            </thead>
+                            <tbody id="relatorio-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            <div id="configuracoes" class="page-content hidden">
+                <header class="main-header">
+                    <h1>Configurações</h1>
+                </header>
+                <section class="settings-container">
+                    <h2>Tema da Aplicação</h2>
+                    <div class="theme-switch-wrapper">
+                        <label>Modo Claro</label>
+                        <label class="theme-switch">
+                            <input type="checkbox" id="theme-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <label>Modo Escuro</label>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
