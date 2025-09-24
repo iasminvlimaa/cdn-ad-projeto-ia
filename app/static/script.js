@@ -368,4 +368,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializa a aplicação
     initApp();
+
+    // --- LÓGICA DO MENU HAMBURGER ---
+    function initMobileMenu() {
+        const sidebar = document.getElementById('sidebar');
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const overlay = document.getElementById('overlay');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+        const closeMenu = () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        };
+
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            });
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', closeMenu);
+        }
+
+        // Opcional: Fecha o menu quando um link é clicado
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+    }
+
+    // Chama a nova função
+    initMobileMenu();
 });

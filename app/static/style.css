@@ -360,82 +360,63 @@ body.dark-mode #analise-escolas-select {
     }
 }
 
-/* Regras aprimoradas para tablets e celulares */
+/* NOVA LÓGICA PARA MENU RETRÁTIL EM CELULARES */
 @media (max-width: 768px) {
-    /* --- CORREÇÃO PRINCIPAL --- */
-    /* Força o container a empilhar os elementos verticalmente */
-    .dashboard-container {
-        flex-direction: column;
-    }
-    
-    /* 1. Transforma a sidebar em uma barra de topo */
+    /* 1. Esconde a sidebar fora da tela por padrão */
     .sidebar {
-        width: 100%; 
-        height: auto; 
-        position: relative;
-        border-right: none; 
-        border-bottom: 1px solid var(--cor-borda);
-        padding: 15px;
-    }
-    .sidebar-header {
-        margin-bottom: 15px;
-    }
-    .sidebar-menu { 
-        display: flex; 
-        justify-content: space-around; 
-    }
-    .sidebar-menu li a span { 
-        display: none;
-    }
-    .sidebar-menu li a {
-        padding: 10px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000; /* Garante que o menu fique acima de tudo */
     }
 
-    /* 2. Ajusta o conteúdo principal */
-    .main-content { 
-        margin-left: 0; 
-        padding: 20px; 
-    }
-    .main-header h1 { 
-        font-size: 1.5em;
-    }
-    .main-header p {
-        font-size: 1em;
-    }
-
-    /* 3. Empilha os filtros verticalmente */
-    .filtros-container {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-    .filtro-item select {
-        width: 100%;
+    /* 2. Classe 'open' que faz a sidebar aparecer */
+    .sidebar.open {
+        transform: translateX(0);
     }
     
-    /* 4. Ajusta o tamanho da fonte nos KPIs */
-    .kpi-card p {
-        font-size: 2.2em;
+    /* 3. Ajusta o conteúdo principal para ocupar a tela toda */
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+        padding-top: 70px; /* Adiciona espaço para o botão hamburger */
     }
 
-    /* 5. Faz as tabelas rolarem horizontalmente */
-    .table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+    /* 4. Estilo e posicionamento do botão hamburger */
+    .hamburger-btn {
+        display: block;
+        position: absolute;
+        top: 25px;
+        left: 20px;
+        background: none;
+        border: none;
+        color: var(--cor-principal);
+        font-size: 2em;
+        cursor: pointer;
+        z-index: 500;
     }
-    
-    /* 6. Garante que o grid do dashboard ocupe uma coluna */
-    .dashboard-grid {
-        grid-template-columns: 1fr;
+    .main-header h1 {
+        margin-top: 40px; /* Empurra o título para baixo do botão */
     }
 
-    /* 7. Ajusta a ferramenta de comparação de escolas */
-    .comparison-tool {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .comparison-action .cta-button {
+    /* 5. Estilo do overlay */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-        justify-content: center;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none; /* Escondido por padrão */
     }
+
+    /* 6. Classe 'active' que mostra o overlay */
+    .overlay.active {
+        display: block;
+    }
+}
+
+/* Oculta o botão hamburger em telas grandes por padrão */
+.hamburger-btn { 
+    display: none; 
 }

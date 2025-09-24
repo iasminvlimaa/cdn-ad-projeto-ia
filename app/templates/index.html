@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <nav class="sidebar">
+        <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <i class="ph-fill ph-graduation-cap"></i>
                 <span>Análise IA</span>
@@ -24,11 +24,12 @@
         </nav>
 
         <main class="main-content">
+            <header class="main-header">
+                <button id="hamburger-btn" class="hamburger-btn"><i class="ph-fill ph-list"></i></button>
+                <h1>Dashboard de Análise Educacional</h1>
+                <p>Prêmio de Educação - Instituto Alpargatas</p>
+            </header>
             <div id="dashboard" class="page-content">
-                <header class="main-header">
-                    <h1>Dashboard de Análise Educacional</h1>
-                    <p>Prêmio de Educação - Instituto Alpargatas</p>
-                </header>
                 <section class="filtros-container">
                     <div class="filtro-item">
                         <label for="filtro-regiao">Região</label>
@@ -178,6 +179,7 @@
                 </section>
             </div>
         </main>
+        <div id="overlay" class="overlay"></div>
     </div>
     <script src="/static/script.js"></script>
 </body>
