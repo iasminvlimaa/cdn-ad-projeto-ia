@@ -362,6 +362,12 @@ body.dark-mode #analise-escolas-select {
 
 /* Regras aprimoradas para tablets e celulares */
 @media (max-width: 768px) {
+    /* --- CORREÇÃO PRINCIPAL --- */
+    /* Força o container a empilhar os elementos verticalmente */
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
     /* 1. Transforma a sidebar em uma barra de topo */
     .sidebar {
         width: 100%; 
@@ -372,17 +378,17 @@ body.dark-mode #analise-escolas-select {
         padding: 15px;
     }
     .sidebar-header {
-        margin-bottom: 15px; /* Reduz a margem inferior do header */
+        margin-bottom: 15px;
     }
     .sidebar-menu { 
         display: flex; 
         justify-content: space-around; 
     }
     .sidebar-menu li a span { 
-        display: none; /* Esconde o texto dos links, deixando só os ícones */
+        display: none;
     }
     .sidebar-menu li a {
-        padding: 10px; /* Ajusta o padding dos ícones */
+        padding: 10px;
     }
 
     /* 2. Ajusta o conteúdo principal */
@@ -391,20 +397,20 @@ body.dark-mode #analise-escolas-select {
         padding: 20px; 
     }
     .main-header h1 { 
-        font-size: 1.5em; /* Diminui o título principal */
+        font-size: 1.5em;
     }
     .main-header p {
-        font-size: 1em; /* Ajusta o parágrafo do header */
+        font-size: 1em;
     }
 
     /* 3. Empilha os filtros verticalmente */
     .filtros-container {
-        flex-direction: column; /* Coloca um filtro embaixo do outro */
-        align-items: stretch; /* Faz os itens ocuparem a largura total */
+        flex-direction: column;
+        align-items: stretch;
         gap: 15px;
     }
     .filtro-item select {
-        width: 100%; /* Garante que o seletor ocupe todo o espaço */
+        width: 100%;
     }
     
     /* 4. Ajusta o tamanho da fonte nos KPIs */
@@ -414,8 +420,8 @@ body.dark-mode #analise-escolas-select {
 
     /* 5. Faz as tabelas rolarem horizontalmente */
     .table-wrapper {
-        overflow-x: auto; /* ESSENCIAL: Adiciona a barra de rolagem horizontal */
-        -webkit-overflow-scrolling: touch; /* Melhora a experiência de rolagem em iOS */
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     /* 6. Garante que o grid do dashboard ocupe uma coluna */
