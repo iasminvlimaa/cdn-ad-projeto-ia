@@ -355,16 +355,81 @@ body.dark-mode #analise-escolas-select {
 
 /* --- Responsividade --- */
 @media (max-width: 1200px) {
-    .dashboard-grid { grid-template-columns: 1fr; }
+    .dashboard-grid { 
+        grid-template-columns: 1fr; 
+    }
 }
 
+/* Regras aprimoradas para tablets e celulares */
 @media (max-width: 768px) {
+    /* 1. Transforma a sidebar em uma barra de topo */
     .sidebar {
-        width: 100%; height: auto; position: relative;
-        border-right: none; border-bottom: 1px solid var(--cor-borda);
+        width: 100%; 
+        height: auto; 
+        position: relative;
+        border-right: none; 
+        border-bottom: 1px solid var(--cor-borda);
+        padding: 15px;
     }
-    .sidebar-menu { display: flex; justify-content: space-around; }
-    .sidebar-menu li a span { display: none; }
-    .main-content { margin-left: 0; padding: 20px; }
-    .main-header h1 { font-size: 1.5em; }
+    .sidebar-header {
+        margin-bottom: 15px; /* Reduz a margem inferior do header */
+    }
+    .sidebar-menu { 
+        display: flex; 
+        justify-content: space-around; 
+    }
+    .sidebar-menu li a span { 
+        display: none; /* Esconde o texto dos links, deixando só os ícones */
+    }
+    .sidebar-menu li a {
+        padding: 10px; /* Ajusta o padding dos ícones */
+    }
+
+    /* 2. Ajusta o conteúdo principal */
+    .main-content { 
+        margin-left: 0; 
+        padding: 20px; 
+    }
+    .main-header h1 { 
+        font-size: 1.5em; /* Diminui o título principal */
+    }
+    .main-header p {
+        font-size: 1em; /* Ajusta o parágrafo do header */
+    }
+
+    /* 3. Empilha os filtros verticalmente */
+    .filtros-container {
+        flex-direction: column; /* Coloca um filtro embaixo do outro */
+        align-items: stretch; /* Faz os itens ocuparem a largura total */
+        gap: 15px;
+    }
+    .filtro-item select {
+        width: 100%; /* Garante que o seletor ocupe todo o espaço */
+    }
+    
+    /* 4. Ajusta o tamanho da fonte nos KPIs */
+    .kpi-card p {
+        font-size: 2.2em;
+    }
+
+    /* 5. Faz as tabelas rolarem horizontalmente */
+    .table-wrapper {
+        overflow-x: auto; /* ESSENCIAL: Adiciona a barra de rolagem horizontal */
+        -webkit-overflow-scrolling: touch; /* Melhora a experiência de rolagem em iOS */
+    }
+    
+    /* 6. Garante que o grid do dashboard ocupe uma coluna */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* 7. Ajusta a ferramenta de comparação de escolas */
+    .comparison-tool {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .comparison-action .cta-button {
+        width: 100%;
+        justify-content: center;
+    }
 }
