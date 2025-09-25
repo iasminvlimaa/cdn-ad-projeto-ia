@@ -183,7 +183,7 @@
             <div id="impacto" class="page-content hidden">
                 <header class="main-header">
                     <h1>Análise de Impacto (Antes e Depois)</h1>
-                    <p>Compare o desempenho das escolas em 2019 (ano base, pré-intervenção) com um ano subsequente.</p>
+                    <p>Compare o desempenho das escolas em um ano base ("Antes") com um ano subsequente ("Depois").</p>
                 </header>
                 <section class="analysis-container">
                     <h2>Filtros da Análise</h2>
@@ -191,6 +191,20 @@
                         <div class="filtro-item" style="flex-grow: 1;">
                             <label for="impacto-escolas-select">Selecione uma ou mais escolas</label>
                             <select id="impacto-escolas-select" multiple></select>
+                        </div>
+                        
+                        <div class="filtro-item">
+                            <label for="impacto-ano-antes-select">Selecione o ano ("Antes")</label>
+                            <select id="impacto-ano-antes-select">
+                                <option value="2015">2015</option>
+                                <option value="2016">2016</option>
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019" selected>2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                            </select>
                         </div>
                         <div class="filtro-item">
                             <label for="impacto-ano-select">Selecione o ano ("Depois")</label>

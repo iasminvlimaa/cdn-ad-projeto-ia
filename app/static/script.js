@@ -198,11 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initAnalises() {
         const selectEscolas = document.getElementById('analise-escolas-select');
         const compararBtn = document.getElementById('analise-comparar-btn');
-        //const anoSpan = document.getElementById('analise-ano-selecionado'); // REMOVIDO: Não existe no HTML
         const selectHistorico = document.getElementById('analise-historico-select');
         if (!selectEscolas) return;
-        
-        // anoSpan.textContent = estado.ano; // REMOVIDO
         
         const responseEscolas = await fetch(`/api/escolas?ano=${estado.ano}&regiao=Todas`);
         const todasEscolas = await responseEscolas.json();
@@ -342,12 +339,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const escolaIds = selectedOptions.map(opt => parseInt(opt.value));
             const anoDepois = parseInt(selectAno.value);
             
+            // NOVO: Ler o valor do ano "Antes"
+            const selectAnoAntes = document.getElementById('impacto-ano-antes-select');
+            const anoAntes = parseInt(selectAnoAntes.value); 
+            // FIM NOVO
+            
             resultadosContainer.classList.remove('hidden');
             
             const payload = {
                 escola_ids: escolaIds,
                 ano_depois: anoDepois,
-                ano_antes: 2019
+                ano_antes: anoAntes // Usa o valor lido
             };
     
             try {
@@ -358,9 +360,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await response.json();
     
-                renderImpactoEscolasChart(data.escolas, anoDepois);
-                renderImpactoAlunosChart(data.alunos, anoDepois);
-                renderImpactoProfessoresChart(data.professores, anoDepois);
+                // Usar setTimeout para garantir que o DOM tenha tempo de se renderizar (Corrige responsividade)
+                setTimeout(() => {
+                    renderImpactoEscolasChart(data.escolas, anoDepois);
+                    renderImpactoAlunosChart(data.alunos, anoDepois);
+                    renderImpactoProfessoresChart(data.professores, anoDepois);
+                }, 100);
+
             } catch (error) {
                 console.error("Erro ao gerar análise de impacto:", error);
                 document.getElementById('impacto-resultados-container').innerHTML = "<p>Erro ao carregar dados de impacto.</p>";
@@ -414,7 +420,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        // Correção da escala Y para acomodar notas de 0 a 1000
+                        suggestedMax: 1000 
+                    } 
+                } 
+            }
         });
     }
 
