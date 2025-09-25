@@ -28,12 +28,10 @@ body {
     overflow-x: hidden;
 }
 
-/* --- NOVO HEADER PARA CELULAR (ESCONDIDO POR PADRÃO) --- */
 .mobile-header {
     display: none;
 }
 
-/* --- Layout Principal com Sidebar --- */
 .dashboard-container {
     display: flex;
 }
@@ -391,6 +389,63 @@ input:checked+.slider:before {
     justify-content: center;
 }
 
+.timeline-container {
+    margin-top: 40px;
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: var(--cor-borda);
+    border-radius: 2px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-left: 60px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: var(--cor-branco);
+    border-radius: 8px;
+    border: 1px solid var(--cor-borda);
+    box-shadow: 0 4px 6px var(--cor-sombra);
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -49px;
+    top: 22px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--cor-principal);
+    border: 4px solid var(--cor-fundo);
+    z-index: 1;
+}
+
+.timeline-item h3 {
+    margin: 0;
+    font-size: 1.5em;
+    color: var(--cor-principal);
+}
+
+.timeline-item p {
+    margin: 8px 0 0 0;
+    color: var(--cor-texto-secundario);
+    line-height: 1.5;
+}
+
 body.dark-mode {
     --cor-fundo: #1a1a1a;
     --cor-branco: #2c2c2c;
@@ -421,7 +476,6 @@ body.dark-mode #analise-escolas-select {
     }
 }
 
-/* LÓGICA PARA MENU RETRÁTIL E AJUSTES DE CONTEÚDO EM CELULARES */
 @media (max-width: 768px) {
     .mobile-header {
         display: flex;

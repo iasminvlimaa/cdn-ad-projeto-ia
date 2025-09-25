@@ -32,12 +32,11 @@
         </nav>
 
         <main class="main-content">
-            <header class="main-header">
-                <h1>Dashboard de Análise Educacional</h1>
-                <p>Prêmio de Educação - Instituto Alpargatas</p>
-            </header>
-            
             <div id="dashboard" class="page-content">
+                <header class="main-header">
+                    <h1>Dashboard de Análise Educacional</h1>
+                    <p>Prêmio de Educação - Instituto Alpargatas</p>
+                </header>
                 <section class="filtros-container">
                     <div class="filtro-item">
                         <label for="filtro-regiao">Região</label>
@@ -64,11 +63,11 @@
                     </div>
                     <div class="kpi-card">
                         <h2>Melhoria Anual</h2>
-                        <p id="melhoria-anual" class="positivo">+2.0%</p>
+                        <p id="melhoria-anual" class="positivo">+0.0%</p>
                     </div>
                     <div class="kpi-card">
                         <h2>Benchmark vs. IDEB</h2>
-                        <p id="benchmark-ideb" class="negativo">-0.04</p>
+                        <p id="benchmark-ideb" class="positivo">+0.0</p>
                     </div>
                 </section>
                 <div class="dashboard-grid">
@@ -115,9 +114,10 @@
                 <header class="main-header">
                     <h1>Análises Detalhadas</h1>
                 </header>
+                
                 <section class="analysis-container">
                     <h2>Comparativo de Escolas</h2>
-                    <p>Selecione até 3 escolas para comparar seus indicadores para o ano de <span id="analise-ano-selecionado">2025</span>.</p>
+                    <p>Selecione até 3 escolas para comparar seus indicadores.</p>
                     <div class="comparison-tool">
                         <div class="school-selector">
                             <label for="analise-escolas-select">Escolas Disponíveis</label>
@@ -129,18 +129,22 @@
                     </div>
                     <div id="analise-resultado-container" class="kpi-grid"></div>
                 </section>
+
                 <section class="analysis-container">
-                    <h2>Evolução Histórica por Escola</h2>
-                    <p>Selecione uma escola para ver sua evolução de pontuação de 2020 a 2025.</p>
+                    <h2>Jornada da Escola</h2>
+                    <p>Selecione uma escola para ver sua história de impacto e evolução de 2020 a 2025.</p>
                      <div class="filtros-container">
                         <div class="filtro-item">
-                            <label for="analise-historico-select">Selecione uma Escola (do ano de 2025):</label>
+                            <label for="analise-historico-select">Selecione uma Escola:</label>
                             <select id="analise-historico-select"></select>
                         </div>
                     </div>
                     <div class="chart-container">
                         <canvas id="historicoChart"></canvas>
                     </div>
+
+                    <div id="jornada-kpi-grid" class="kpi-grid" style="margin-top: 25px;"></div>
+                    <div id="jornada-timeline-container" class="timeline-container"></div>
                 </section>
             </div>
             

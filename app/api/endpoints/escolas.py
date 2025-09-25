@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from app.api import deps
@@ -38,3 +38,10 @@ def get_escolas_para_comparacao(escola_ids: List[int], ano: int, db: Session = D
 @router.get("/escolas/{escola_id}/historico", response_model=List[premio.HistoricoPonto], tags=["Análises"])
 def get_historico_escola(escola_id: int, db: Session = Depends(deps.get_db)):
     return premio_service.obter_historico_escola(db=db, escola_id=escola_id)
+
+@router.get("/escolas/{escola_id}/jornada", response_model=premio.JornadaEscolaResponse, tags=["Análises"])
+def get_jornada_escola(escola_id: int, db: Session = Depends(deps.get_db)):
+    jornada_data = premio_service.obter_jornada_escola(db=db, escola_id=escola_id)
+    if not jornada_data:
+        raise HTTPException(status_code=404, detail="Dados da jornada não encontrados para a escola")
+    return jornada_data
