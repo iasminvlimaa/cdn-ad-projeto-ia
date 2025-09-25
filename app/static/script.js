@@ -362,9 +362,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
                 // Usar setTimeout para garantir que o DOM tenha tempo de se renderizar (Corrige responsividade)
                 setTimeout(() => {
-                    renderImpactoEscolasChart(data.escolas, anoDepois);
-                    renderImpactoAlunosChart(data.alunos, anoDepois);
-                    renderImpactoProfessoresChart(data.professores, anoDepois);
+                    renderImpactoEscolasChart(data.escolas, anoAntes, anoDepois);
+                    renderImpactoAlunosChart(data.alunos, anoAntes, anoDepois);
+                    renderImpactoProfessoresChart(data.professores, anoAntes, anoDepois);
                 }, 100);
 
             } catch (error) {
@@ -374,7 +374,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
     
-    function renderImpactoEscolasChart(data, anoDepois) {
+    // CORRIGIDO: Adicionado anoAntes como parâmetro para as três funções
+    function renderImpactoEscolasChart(data, anoAntes, anoDepois) {
         const ctx = document.getElementById('impactoEscolasChart').getContext('2d');
         if (impactoEscolasChartInstance) impactoEscolasChartInstance.destroy();
     
@@ -384,11 +385,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: data.map(e => e.nome_escola),
                 datasets: [
                     {
-                        label: 'Desempenho em 2019 ("Antes")',
+                        // CORRIGIDO: Usar a variável anoAntes
+                        label: `Desempenho em ${anoAntes} ("Antes")`,
                         data: data.map(e => e.pontuacao_antes),
                         backgroundColor: 'rgba(132, 146, 166, 0.7)',
                     },
                     {
+                        // CORRIGIDO: Usar a variável anoDepois
                         label: `Desempenho em ${anoDepois} ("Depois")`,
                         data: data.map(e => e.pontuacao_depois),
                         backgroundColor: 'rgba(255, 103, 0, 0.7)',
@@ -399,7 +402,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    function renderImpactoAlunosChart(data, anoDepois) {
+    // CORRIGIDO: Adicionado anoAntes como parâmetro para as três funções
+    function renderImpactoAlunosChart(data, anoAntes, anoDepois) {
         const ctx = document.getElementById('impactoAlunosChart').getContext('2d');
         if (impactoAlunosChartInstance) impactoAlunosChartInstance.destroy();
     
@@ -409,11 +413,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: ['Média Geral dos Alunos'],
                 datasets: [
                     {
-                        label: 'Média em 2019 ("Antes")',
+                        // CORRIGIDO: Usar a variável anoAntes
+                        label: `Média em ${anoAntes} ("Antes")`,
                         data: [data.media_alunos_antes],
                         backgroundColor: 'rgba(132, 146, 166, 0.7)'
                     },
                     {
+                        // CORRIGIDO: Usar a variável anoDepois
                         label: `Média em ${anoDepois} ("Depois")`,
                         data: [data.media_alunos_depois],
                         backgroundColor: 'rgba(255, 103, 0, 0.7)'
@@ -434,7 +440,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function renderImpactoProfessoresChart(data, anoDepois) {
+    // CORRIGIDO: Adicionado anoAntes como parâmetro para as três funções
+    function renderImpactoProfessoresChart(data, anoAntes, anoDepois) {
         const ctx = document.getElementById('impactoProfessoresChart').getContext('2d');
         if (impactoProfessoresChartInstance) impactoProfessoresChartInstance.destroy();
     
@@ -444,11 +451,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: ['Avaliação Média dos Professores'],
                 datasets: [
                     {
-                        label: 'Média em 2019 ("Antes")',
+                        // CORRIGIDO: Usar a variável anoAntes
+                        label: `Média em ${anoAntes} ("Antes")`,
                         data: [data.media_professores_antes],
                         backgroundColor: 'rgba(132, 146, 166, 0.7)'
                     },
                     {
+                        // CORRIGIDO: Usar a variável anoDepois
                         label: `Média em ${anoDepois} ("Depois")`,
                         data: [data.media_professores_depois],
                         backgroundColor: 'rgba(255, 103, 0, 0.7)'
