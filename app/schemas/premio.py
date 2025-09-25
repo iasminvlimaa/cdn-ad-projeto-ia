@@ -33,8 +33,9 @@ class EscolaBase(BaseModel):
 
 class EscolaInDB(EscolaBase):
     id: int
-    alunos: List[AlunoInDB] = []
-    professores: List[ProfessorInDB] = []
+    # AO COMENTAR AS LINHAS ABAIXO, SIMPLIFICAMOS A RESPOSTA DA API PARA RESOLVER O ERRO
+    # alunos: List[AlunoInDB] = []
+    # professores: List[ProfessorInDB] = []
     class Config:
         from_attributes = True
 

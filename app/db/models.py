@@ -33,6 +33,3 @@ class Professor(Base):
     escola_id = Column(Integer, ForeignKey("escolas.id"))
     ano = Column(Integer, index=True)
     escola = relationship("Escola", back_populates="professores")
-    
-#lets goooooooo
-    

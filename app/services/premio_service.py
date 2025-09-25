@@ -11,10 +11,7 @@ def apply_filters(query, ano: int, regiao: str):
     return query
 
 def listar_escolas(db: Session, ano: int, regiao: str, nome: str = None):
-    query = db.query(models.Escola).options(
-        selectinload(models.Escola.alunos), 
-        selectinload(models.Escola.professores)
-    )
+    query = db.query(models.Escola)
     query = apply_filters(query, ano, regiao)
     if nome:
         query = query.filter(models.Escola.nome.contains(nome))
@@ -38,10 +35,7 @@ def calcular_desempenho_por_regiao(db: Session, ano: int):
     return [{"regiao": r.regiao, "media_pontuacao": round(r.media_pontuacao, 2)} for r in resultado]
 
 def listar_top_10_escolas(db: Session, ano: int, regiao: str):
-    query = db.query(models.Escola).options(
-        selectinload(models.Escola.alunos), 
-        selectinload(models.Escola.professores)
-    )
+    query = db.query(models.Escola)
     query = apply_filters(query, ano, regiao)
     return query.order_by(models.Escola.pontuacao_premio.desc()).limit(10).all()
 
@@ -76,10 +70,7 @@ def calcular_benchmark_ideb(db: Session, ano: int, regiao: str):
 
 def obter_escolas_por_ids(db: Session, ids: list[int], ano: int):
     if not ids: return []
-    return db.query(models.Escola).options(
-        selectinload(models.Escola.alunos), 
-        selectinload(models.Escola.professores)
-    ).filter(models.Escola.id.in_(ids), models.Escola.ano == ano).all()
+    return db.query(models.Escola).filter(models.Escola.id.in_(ids), models.Escola.ano == ano).all()
 
 def obter_historico_escola(db: Session, escola_id: int):
     escola_ref = db.query(models.Escola).filter(models.Escola.id == escola_id).first()
