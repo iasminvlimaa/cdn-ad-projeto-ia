@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# exit on error
+# Encerra o script se qualquer comando falhar
 set -o errexit
 
-# 1. Instala as dependências
+# 1. Instala as dependências do Python
 pip install -r requirements.txt
 
-# 2. Aplica as migrações do banco (cria as tabelas)
+# 2. Roda as migrações para CRIAR as tabelas (escolas, alunos, etc.)
+echo "Running database migrations..."
 alembic upgrade head
 
-# 3. POPULA O BANCO DE DADOS (APENAS DESTA VEZ)
-echo "Iniciando a população do banco de dados..."
+# 3. Roda o script para POPULAR as tabelas com dados
+echo "Populating the database..."
 python populate_db.py
