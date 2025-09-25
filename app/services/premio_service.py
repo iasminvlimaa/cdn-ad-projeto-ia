@@ -11,7 +11,6 @@ def apply_filters(query, ano: int, regiao: str):
     return query
 
 def listar_escolas(db: Session, ano: int, regiao: str, nome: str = None):
-    # ADICIONADO options(selectinload(...)) PARA CARREGAR DADOS RELACIONADOS
     query = db.query(models.Escola).options(
         selectinload(models.Escola.alunos), 
         selectinload(models.Escola.professores)
@@ -39,7 +38,6 @@ def calcular_desempenho_por_regiao(db: Session, ano: int):
     return [{"regiao": r.regiao, "media_pontuacao": round(r.media_pontuacao, 2)} for r in resultado]
 
 def listar_top_10_escolas(db: Session, ano: int, regiao: str):
-    # ADICIONADO options(selectinload(...))
     query = db.query(models.Escola).options(
         selectinload(models.Escola.alunos), 
         selectinload(models.Escola.professores)
@@ -78,7 +76,6 @@ def calcular_benchmark_ideb(db: Session, ano: int, regiao: str):
 
 def obter_escolas_por_ids(db: Session, ids: list[int], ano: int):
     if not ids: return []
-    # ADICIONADO options(selectinload(...))
     return db.query(models.Escola).options(
         selectinload(models.Escola.alunos), 
         selectinload(models.Escola.professores)

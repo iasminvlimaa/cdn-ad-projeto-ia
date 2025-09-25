@@ -11,8 +11,6 @@ class Escola(Base):
     pontuacao_premio = Column(Float)
     ideb_publico = Column(Float)
     ano = Column(Integer, index=True)
-    latitude = Column(Float, nullable=True)
-    longitude = Column(Float, nullable=True)
     
     alunos = relationship("Aluno", back_populates="escola")
     professores = relationship("Professor", back_populates="escola")

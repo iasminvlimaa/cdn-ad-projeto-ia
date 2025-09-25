@@ -30,8 +30,6 @@ class EscolaBase(BaseModel):
     pontuacao_premio: float
     ideb_publico: float
     ano: int
-    latitude: Optional[float] = None
-    longitude: Optional[float] = None
 
 class EscolaInDB(EscolaBase):
     id: int
