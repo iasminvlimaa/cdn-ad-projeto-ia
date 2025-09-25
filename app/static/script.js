@@ -198,12 +198,12 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initAnalises() {
         const selectEscolas = document.getElementById('analise-escolas-select');
         const compararBtn = document.getElementById('analise-comparar-btn');
-        const anoSpan = document.getElementById('analise-ano-selecionado');
+        //const anoSpan = document.getElementById('analise-ano-selecionado'); // REMOVIDO: Não existe no HTML
         const selectHistorico = document.getElementById('analise-historico-select');
         if (!selectEscolas) return;
         
-        anoSpan.textContent = estado.ano;
-
+        // anoSpan.textContent = estado.ano; // REMOVIDO
+        
         const responseEscolas = await fetch(`/api/escolas?ano=${estado.ano}&regiao=Todas`);
         const todasEscolas = await responseEscolas.json();
         
