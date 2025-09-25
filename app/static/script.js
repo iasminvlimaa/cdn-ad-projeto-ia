@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let historicoChartInstance = null;
     let impactoEscolasChartInstance = null;
     let impactoAlunosChartInstance = null;
+    let impactoProfessoresChartInstance = null;
     const sidebarLinks = document.querySelectorAll('.sidebar-link');
     const pages = document.querySelectorAll('.page-content');
 
@@ -359,9 +360,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
                 renderImpactoEscolasChart(data.escolas, anoDepois);
                 renderImpactoAlunosChart(data.alunos, anoDepois);
+                renderImpactoProfessoresChart(data.professores, anoDepois);
             } catch (error) {
                 console.error("Erro ao gerar análise de impacto:", error);
-                document.getElementById('impacto-escolas-chart-container').innerHTML = "<p>Erro ao carregar dados.</p>";
+                document.getElementById('impacto-resultados-container').innerHTML = "<p>Erro ao carregar dados de impacto.</p>";
             }
         };
     }
@@ -413,6 +415,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 ]
             },
             options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+        });
+    }
+
+    function renderImpactoProfessoresChart(data, anoDepois) {
+        const ctx = document.getElementById('impactoProfessoresChart').getContext('2d');
+        if (impactoProfessoresChartInstance) impactoProfessoresChartInstance.destroy();
+    
+        impactoProfessoresChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Avaliação Média dos Professores'],
+                datasets: [
+                    {
+                        label: 'Média em 2019 ("Antes")',
+                        data: [data.media_professores_antes],
+                        backgroundColor: 'rgba(132, 146, 166, 0.7)'
+                    },
+                    {
+                        label: `Média em ${anoDepois} ("Depois")`,
+                        data: [data.media_professores_depois],
+                        backgroundColor: 'rgba(255, 103, 0, 0.7)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, suggestedMax: 10 } }
+            }
         });
     }
 

@@ -12,6 +12,18 @@ class AlunoInDB(AlunoBase):
     class Config:
         from_attributes = True
 
+class ProfessorBase(BaseModel):
+    nome_anonimizado: str
+    anos_experiencia: int
+    pontuacao_avaliacao: float
+    ano: int
+
+class ProfessorInDB(ProfessorBase):
+    id: int
+    escola_id: int
+    class Config:
+        from_attributes = True
+
 class EscolaBase(BaseModel):
     nome: str
     regiao: str
@@ -24,6 +36,7 @@ class EscolaBase(BaseModel):
 class EscolaInDB(EscolaBase):
     id: int
     alunos: List[AlunoInDB] = []
+    professores: List[ProfessorInDB] = []
     class Config:
         from_attributes = True
 
@@ -36,15 +49,15 @@ class HistoricoPonto(BaseModel):
     pontuacao: float
 
 class JornadaKPIs(BaseModel):
-    crescimento_total_percentual: float = Field(..., description="Crescimento percentual da nota do primeiro ao último ano.")
-    melhor_ano: int = Field(..., description="Ano com a maior pontuação registrada.")
-    melhor_pontuacao: float = Field(..., description="A maior pontuação registrada.")
-    total_alunos_destaque: int = Field(..., description="Número total de alunos destaque da escola em todos os anos.")
+    crescimento_total_percentual: float
+    melhor_ano: int
+    melhor_pontuacao: float
+    total_alunos_destaque: int
 
 class PontoDaJornada(BaseModel):
     ano: int
     pontuacao: float
-    ranking_regional: Optional[int] = Field(..., description="Posição da escola no ranking da sua região naquele ano.")
+    ranking_regional: Optional[int]
 
 class JornadaEscolaResponse(BaseModel):
     kpis: JornadaKPIs
@@ -59,9 +72,14 @@ class ImpactoAlunosData(BaseModel):
     media_alunos_antes: Optional[float] = None
     media_alunos_depois: Optional[float] = None
 
-class ImpactoEscolasResponse(BaseModel):
+class ImpactoProfessoresData(BaseModel):
+    media_professores_antes: Optional[float] = None
+    media_professores_depois: Optional[float] = None
+
+class ImpactoResponse(BaseModel):
     escolas: List[ImpactoEscolaData]
     alunos: ImpactoAlunosData
+    professores: ImpactoProfessoresData
 
 class ImpactoRequest(BaseModel):
     escola_ids: List[int]

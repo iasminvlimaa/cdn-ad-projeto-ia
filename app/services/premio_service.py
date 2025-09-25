@@ -157,10 +157,20 @@ def calcular_impacto_escolas_e_alunos(db: Session, escola_ids: List[int], ano_an
     media_alunos_depois = db.query(func.avg(models.Aluno.nota_geral)).filter(
         models.Aluno.escola_id.in_(ids_escolas_depois)
     ).scalar()
-
     impacto_alunos_data = {
         "media_alunos_antes": media_alunos_antes,
         "media_alunos_depois": media_alunos_depois
     }
 
-    return {"escolas": impacto_escolas_data, "alunos": impacto_alunos_data}
+    media_professores_antes = db.query(func.avg(models.Professor.pontuacao_avaliacao)).filter(
+        models.Professor.escola_id.in_(ids_escolas_antes)
+    ).scalar()
+    media_professores_depois = db.query(func.avg(models.Professor.pontuacao_avaliacao)).filter(
+        models.Professor.escola_id.in_(ids_escolas_depois)
+    ).scalar()
+    impacto_professores_data = {
+        "media_professores_antes": media_professores_antes,
+        "media_professores_depois": media_professores_depois
+    }
+
+    return {"escolas": impacto_escolas_data, "alunos": impacto_alunos_data, "professores": impacto_professores_data}
