@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_
 from app.db import models
+from typing import List # IMPORTAÇÃO ADICIONADA AQUI
 
 def apply_filters(query, ano: int, regiao: str):
     if ano:
