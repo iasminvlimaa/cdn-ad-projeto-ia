@@ -87,9 +87,9 @@ def populate_database(db_session):
 
 if __name__ == "__main__":
     load_dotenv()
-    DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("EXTERNAL_DB_URL")
+    DATABASE_URL = os.getenv("DATABASE_URL")
     if not DATABASE_URL:
-        logging.error("URL do banco de dados não encontrada.")
+        logging.error("URL do banco de dados não encontrada. Verifique seu arquivo .env")
     else:
         logging.info("Conectando ao banco de dados...")
         engine = create_engine(DATABASE_URL)
