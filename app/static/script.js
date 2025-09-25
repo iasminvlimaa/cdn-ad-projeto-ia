@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const todasEscolas = await responseEscolas.json();
             const nomesUnicos = [...new Set(todasEscolas.map(e => e.nome))];
             
-            nomesUnicos.forEach(nome => {
+            nomesUnicos.sort().forEach(nome => {
                 const escolaRef = todasEscolas.find(e => e.nome === nome);
                 const option = document.createElement('option');
                 option.value = escolaRef.id;
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const payload = {
                 escola_ids: escolaIds,
                 ano_depois: anoDepois,
-                ano_antes: 2020
+                ano_antes: 2019
             };
     
             try {
@@ -362,7 +362,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 console.error("Erro ao gerar análise de impacto:", error);
                 document.getElementById('impacto-escolas-chart-container').innerHTML = "<p>Erro ao carregar dados.</p>";
-                document.getElementById('impacto-alunos-chart-container').innerHTML = "<p>Erro ao carregar dados.</p>";
             }
         };
     }
@@ -377,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: data.map(e => e.nome_escola),
                 datasets: [
                     {
-                        label: 'Desempenho em 2020 ("Antes")',
+                        label: 'Desempenho em 2019 ("Antes")',
                         data: data.map(e => e.pontuacao_antes),
                         backgroundColor: 'rgba(132, 146, 166, 0.7)',
                     },
@@ -402,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: ['Média Geral dos Alunos'],
                 datasets: [
                     {
-                        label: 'Média em 2020 ("Antes")',
+                        label: 'Média em 2019 ("Antes")',
                         data: [data.media_alunos_antes],
                         backgroundColor: 'rgba(132, 146, 166, 0.7)'
                     },

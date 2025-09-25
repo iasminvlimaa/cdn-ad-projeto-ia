@@ -66,4 +66,4 @@ class ImpactoEscolasResponse(BaseModel):
 class ImpactoRequest(BaseModel):
     escola_ids: List[int]
     ano_depois: int
-    ano_antes: int = 2020
+    ano_antes: int = 2019

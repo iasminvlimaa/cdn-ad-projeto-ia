@@ -197,6 +197,7 @@ body {
     border-radius: 12px;
     border: 1px solid var(--cor-borda);
     transition: background-color 0.3s, border-color 0.3s;
+    margin-bottom: 25px;
 }
 
 .chart-container {
@@ -362,7 +363,7 @@ input:checked+.slider:before {
     margin-bottom: 10px;
 }
 
-#analise-escolas-select {
+#analise-escolas-select, #impacto-escolas-select {
     width: 100%;
     min-height: 150px;
     border-radius: 8px;
@@ -371,7 +372,7 @@ input:checked+.slider:before {
     font-size: 1em;
 }
 
-#analise-escolas-select:focus {
+#analise-escolas-select:focus, #impacto-escolas-select:focus {
     outline: none;
     border-color: var(--cor-principal);
     box-shadow: 0 0 0 2px rgba(255, 103, 0, 0.2);
@@ -464,7 +465,8 @@ body.dark-mode th {
 }
 
 body.dark-mode .filtro-item select,
-body.dark-mode #analise-escolas-select {
+body.dark-mode #analise-escolas-select,
+body.dark-mode #impacto-escolas-select {
     background-color: #383838;
     color: var(--cor-texto-principal);
 }
