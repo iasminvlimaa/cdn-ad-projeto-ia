@@ -89,7 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/api/desempenho/geral?ano=${ano}&regiao=${regiao}`);
             const data = await response.json();
             el.textContent = data.media_geral_premio.toFixed(2);
-        } catch (error) { console.error('Erro KPI Média:', error); }
+        } catch (error) {
+            console.error('Erro KPI Média:', error);
+        }
     }
 
     async function carregarKpiMelhoriaAnual(ano, regiao) {
@@ -101,7 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const valor = data.melhoria_percentual;
             el.textContent = `${valor >= 0 ? '+' : ''}${valor.toFixed(1)}%`;
             el.className = valor >= 0 ? 'positivo' : 'negativo';
-        } catch (error) { console.error('Erro KPI Melhoria:', error); }
+        } catch (error) {
+            console.error('Erro KPI Melhoria:', error);
+        }
     }
 
     async function carregarKpiBenchmark(ano, regiao) {
@@ -113,7 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const valor = data.diferenca_ideb;
             el.textContent = `${valor >= 0 ? '+' : ''}${valor.toFixed(2)}`;
             el.className = valor >= 0 ? 'positivo' : 'negativo';
-        } catch (error) { console.error('Erro KPI Benchmark:', error); }
+        } catch (error) {
+            console.error('Erro KPI Benchmark:', error);
+        }
     }
 
     async function carregarRankingEscolas(ano, regiao) {
@@ -133,7 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.innerHTML = `<td>${index + 1}º</td><td>${escola.nome}</td><td>${escola.pontuacao_premio.toFixed(2)}</td><td>${escola.regiao}</td>`;
                 tabelaBody.appendChild(row);
             });
-        } catch (error) { console.error('Erro Ranking Escolas:', error); }
+        } catch (error) {
+            console.error('Erro Ranking Escolas:', error);
+        }
     }
 
     async function carregarRankingAlunos(ano, regiao) {
@@ -157,9 +165,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.innerHTML = `<td>${index + 1}º</td><td>${aluno.nome_anonimizado}</td><td>${aluno.nota_geral.toFixed(2)}</td><td>${nomeEscola}</td>`;
                 tabelaBody.appendChild(row);
             });
-        } catch (error) { console.error('Erro Ranking Alunos:', error); }
+        } catch (error) {
+            console.error('Erro Ranking Alunos:', error);
+        }
     }
-    
+
     async function carregarGraficoRegioes(ano) {
         const canvas = document.getElementById('regiaoChart');
         if (!canvas) return;
@@ -167,9 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/api/desempenho/regioes?ano=${ano}`);
             const data = await response.json();
             const ctx = canvas.getContext('2d');
-            
-            if(chartInstance) chartInstance.destroy();
-            
+
+            if (chartInstance) chartInstance.destroy();
+
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -186,8 +196,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
                     onClick: (event, elements) => {
                         if (elements.length > 0) {
                             const index = elements[0].index;
@@ -199,7 +217,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-        } catch (error) { console.error('Erro Gráfico:', error); }
+        } catch (error) {
+            console.error('Erro Gráfico:', error);
+        }
     }
 
     // --- LÓGICA DA PÁGINA DE ANÁLISES ---
@@ -209,12 +229,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const anoSpan = document.getElementById('analise-ano-selecionado');
         const selectHistorico = document.getElementById('analise-historico-select');
         if (!selectEscolas) return;
-        
+
         anoSpan.textContent = estado.ano;
 
         const responseEscolas = await fetch(`/api/escolas?ano=${estado.ano}&regiao=Todas`);
         const todasEscolas = await responseEscolas.json();
-        
+
         selectEscolas.innerHTML = '';
         selectHistorico.innerHTML = '<option value="">Selecione uma escola</option>';
 
@@ -233,7 +253,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const response = await fetch(`/api/escolas/comparar?ano=${estado.ano}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(selectedIds)
             });
             const escolasParaComparar = await response.json();
@@ -251,11 +273,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const escolaId = event.target.value;
             if (historicoChartInstance) historicoChartInstance.destroy();
             if (!escolaId) return;
-            
+
             const response = await fetch(`/api/escolas/${escolaId}/historico`);
             const historicoData = await response.json();
             const ctx = document.getElementById('historicoChart').getContext('2d');
-            
+
             historicoChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -269,7 +291,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         tension: 0.2
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
             });
         };
     }
@@ -280,10 +305,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const tabelaBody = document.getElementById('relatorio-body');
         if (!tabelaBody) return;
         tabelaBody.innerHTML = '<tr><td colspan="6">Carregando...</td></tr>';
-        
+
         const response = await fetch(`/api/escolas?ano=${estado.ano}&regiao=${estado.regiao}`);
         dadosRelatorio = await response.json();
-        
+
         tabelaBody.innerHTML = '';
         if (dadosRelatorio.length === 0) {
             tabelaBody.innerHTML = '<tr><td colspan="6">Nenhum dado encontrado para esta seleção.</td></tr>';
@@ -310,9 +335,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const values = [escola.id, nomeFormatado, escola.regiao, escola.ano, escola.pontuacao_premio, escola.ideb_publico];
             csvRows.push(values.join(','));
         });
-        
+
         const csvString = csvRows.join('\n');
-        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob([csvString], {
+            type: 'text/csv;charset=utf-8;'
+        });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.setAttribute('href', url);
@@ -350,18 +377,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-    
+
     function initApp() {
         const themeToggle = document.getElementById('theme-toggle');
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-mode');
-            if(themeToggle) themeToggle.checked = true;
+            if (themeToggle) themeToggle.checked = true;
         } else {
             document.body.classList.remove('dark-mode');
-            if(themeToggle) themeToggle.checked = false;
+            if (themeToggle) themeToggle.checked = false;
         }
-        
-        initConfiguracoes(); 
+
+        initConfiguracoes();
         popularFiltroRegioes();
         showPage('dashboard');
     }
@@ -374,17 +401,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const sidebar = document.getElementById('sidebar');
         const hamburgerBtn = document.getElementById('hamburger-btn');
         const overlay = document.getElementById('overlay');
+        const mobileHeader = document.getElementById('mobile-header');
         const sidebarLinks = document.querySelectorAll('.sidebar-link');
 
         const closeMenu = () => {
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
+            mobileHeader.classList.remove('is-hidden');
         };
 
         if (hamburgerBtn) {
             hamburgerBtn.addEventListener('click', () => {
                 sidebar.classList.toggle('open');
                 overlay.classList.toggle('active');
+                mobileHeader.classList.toggle('is-hidden');
             });
         }
 
@@ -392,7 +422,6 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.addEventListener('click', closeMenu);
         }
 
-        // Opcional: Fecha o menu quando um link é clicado
         sidebarLinks.forEach(link => {
             link.addEventListener('click', closeMenu);
         });

@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <header class="mobile-header">
+    <header class="mobile-header" id="mobile-header">
         <button id="hamburger-btn" class="hamburger-btn"><i class="ph-fill ph-list"></i></button>
         <div class="mobile-logo">
             <i class="ph-fill ph-graduation-cap"></i>
@@ -36,6 +36,7 @@
                 <h1>Dashboard de Análise Educacional</h1>
                 <p>Prêmio de Educação - Instituto Alpargatas</p>
             </header>
+            
             <div id="dashboard" class="page-content">
                 <section class="filtros-container">
                     <div class="filtro-item">
@@ -111,11 +112,80 @@
             </div>
 
             <div id="analises" class="page-content hidden">
-                </div>
+                <header class="main-header">
+                    <h1>Análises Detalhadas</h1>
+                </header>
+                <section class="analysis-container">
+                    <h2>Comparativo de Escolas</h2>
+                    <p>Selecione até 3 escolas para comparar seus indicadores para o ano de <span id="analise-ano-selecionado">2025</span>.</p>
+                    <div class="comparison-tool">
+                        <div class="school-selector">
+                            <label for="analise-escolas-select">Escolas Disponíveis</label>
+                            <select id="analise-escolas-select" multiple></select>
+                        </div>
+                        <div class="comparison-action">
+                             <button id="analise-comparar-btn" class="cta-button"><i class="ph-fill ph-arrows-clockwise"></i><span>Comparar</span></button>
+                        </div>
+                    </div>
+                    <div id="analise-resultado-container" class="kpi-grid"></div>
+                </section>
+                <section class="analysis-container">
+                    <h2>Evolução Histórica por Escola</h2>
+                    <p>Selecione uma escola para ver sua evolução de pontuação de 2020 a 2025.</p>
+                     <div class="filtros-container">
+                        <div class="filtro-item">
+                            <label for="analise-historico-select">Selecione uma Escola (do ano de 2025):</label>
+                            <select id="analise-historico-select"></select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="historicoChart"></canvas>
+                    </div>
+                </section>
+            </div>
+            
             <div id="relatorios" class="page-content hidden">
-                </div>
+                <header class="main-header">
+                    <h1>Relatórios e Exportação</h1>
+                </header>
+                <section class="ranking-container">
+                    <div class="relatorio-header">
+                        <h2>Relatório Completo de Escolas</h2>
+                        <button id="export-csv-btn" class="cta-button"><i class="ph-fill ph-download-simple"></i>Exportar para CSV</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="relatorio-tabela-escolas">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome da Escola</th>
+                                    <th>Região</th>
+                                    <th>Ano</th>
+                                    <th>Pontuação Prêmio</th>
+                                    <th>IDEB Público</th>
+                                </tr>
+                            </thead>
+                            <tbody id="relatorio-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
             <div id="configuracoes" class="page-content hidden">
-                </div>
+                 <header class="main-header">
+                    <h1>Configurações</h1>
+                </header>
+                <section class="settings-container">
+                    <h2>Tema da Aplicação</h2>
+                    <div class="theme-switch-wrapper">
+                        <label>Modo Claro</label>
+                        <label class="theme-switch">
+                            <input type="checkbox" id="theme-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <label>Modo Escuro</label>
+                    </div>
+                </section>
+            </div>
         </main>
         <div id="overlay" class="overlay"></div>
     </div>
