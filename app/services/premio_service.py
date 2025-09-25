@@ -89,7 +89,6 @@ def obter_jornada_escola(db: Session, escola_id: int):
     ).order_by(models.Escola.ano).all()
     if not historico_completo: return None
 
-    # --- Calcular KPIs ---
     primeiro_ano = historico_completo[0]
     ultimo_ano = historico_completo[-1]
     
@@ -110,7 +109,6 @@ def obter_jornada_escola(db: Session, escola_id: int):
         "total_alunos_destaque": total_alunos_destaque or 0
     }
 
-    # --- Calcular Histórico com Ranking Regional ---
     historico_jornada = []
     for registro_anual in historico_completo:
         escolas_do_ano_na_regiao = db.query(models.Escola.id).filter(
@@ -130,3 +128,38 @@ def obter_jornada_escola(db: Session, escola_id: int):
         })
 
     return {"kpis": kpis, "historico_jornada": historico_jornada}
+
+def calcular_impacto_escolas_e_alunos(db: Session, escola_ids: List[int], ano_antes: int, ano_depois: int):
+    escolas_selecionadas = db.query(models.Escola).filter(models.Escola.id.in_(escola_ids)).all()
+    nomes_escolas_unicas = sorted(list(set([e.nome for e in escolas_selecionadas])))
+
+    impacto_escolas_data = []
+    for nome in nomes_escolas_unicas:
+        pontuacao_antes = db.query(models.Escola.pontuacao_premio).filter(
+            models.Escola.nome == nome, models.Escola.ano == ano_antes
+        ).scalar()
+        pontuacao_depois = db.query(models.Escola.pontuacao_premio).filter(
+            models.Escola.nome == nome, models.Escola.ano == ano_depois
+        ).scalar()
+        impacto_escolas_data.append({
+            "nome_escola": nome,
+            "pontuacao_antes": pontuacao_antes,
+            "pontuacao_depois": pontuacao_depois
+        })
+
+    ids_escolas_antes = [e.id for e in db.query(models.Escola.id).filter(models.Escola.nome.in_(nomes_escolas_unicas), models.Escola.ano == ano_antes).all()]
+    ids_escolas_depois = [e.id for e in db.query(models.Escola.id).filter(models.Escola.nome.in_(nomes_escolas_unicas), models.Escola.ano == ano_depois).all()]
+    
+    media_alunos_antes = db.query(func.avg(models.Aluno.nota_geral)).filter(
+        models.Aluno.escola_id.in_(ids_escolas_antes)
+    ).scalar()
+    media_alunos_depois = db.query(func.avg(models.Aluno.nota_geral)).filter(
+        models.Aluno.escola_id.in_(ids_escolas_depois)
+    ).scalar()
+
+    impacto_alunos_data = {
+        "media_alunos_antes": media_alunos_antes,
+        "media_alunos_depois": media_alunos_depois
+    }
+
+    return {"escolas": impacto_escolas_data, "alunos": impacto_alunos_data}

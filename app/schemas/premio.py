@@ -49,3 +49,21 @@ class PontoDaJornada(BaseModel):
 class JornadaEscolaResponse(BaseModel):
     kpis: JornadaKPIs
     historico_jornada: List[PontoDaJornada]
+
+class ImpactoEscolaData(BaseModel):
+    nome_escola: str
+    pontuacao_antes: Optional[float] = None
+    pontuacao_depois: Optional[float] = None
+
+class ImpactoAlunosData(BaseModel):
+    media_alunos_antes: Optional[float] = None
+    media_alunos_depois: Optional[float] = None
+
+class ImpactoEscolasResponse(BaseModel):
+    escolas: List[ImpactoEscolaData]
+    alunos: ImpactoAlunosData
+
+class ImpactoRequest(BaseModel):
+    escola_ids: List[int]
+    ano_depois: int
+    ano_antes: int = 2020

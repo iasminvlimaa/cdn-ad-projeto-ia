@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ESTADO GLOBAL E ELEMENTOS PRINCIPAIS ---
     const estado = {
         ano: 2025,
         regiao: 'Todas'
@@ -8,25 +7,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const filtroRegiao = document.getElementById('filtro-regiao');
     let chartInstance = null;
     let historicoChartInstance = null;
+    let impactoEscolasChartInstance = null;
+    let impactoAlunosChartInstance = null;
     const sidebarLinks = document.querySelectorAll('.sidebar-link');
     const pages = document.querySelectorAll('.page-content');
 
-    // --- ROTEAMENTO SPA (Single Page Application) ---
     function showPage(pageId) {
         pages.forEach(page => page.classList.add('hidden'));
         const activePage = document.getElementById(pageId);
         if (activePage) {
             activePage.classList.remove('hidden');
         }
-
         sidebarLinks.forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === `#${pageId}`) {
                 link.classList.add('active');
             }
         });
-
-        // Carrega os dados da página específica quando ela é exibida
         switch (pageId) {
             case 'dashboard':
                 atualizarDashboards();
@@ -36,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'relatorios':
                 carregarRelatorioCompleto();
+                break;
+            case 'impacto':
+                initImpacto();
                 break;
         }
     }
@@ -48,11 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- FUNÇÃO PRINCIPAL DE ATUALIZAÇÃO DO DASHBOARD ---
     function atualizarDashboards() {
         const ano = estado.ano;
         const regiao = estado.regiao;
-        console.log(`Atualizando Dashboard para Ano: ${ano}, Região: ${regiao}`);
         carregarKpiMediaGeral(ano, regiao);
         carregarKpiMelhoriaAnual(ano, regiao);
         carregarKpiBenchmark(ano, regiao);
@@ -61,15 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarRankingAlunos(ano, regiao);
     }
 
-    // --- OUVINTES DE EVENTOS DOS FILTROS ---
     function handleFilterChange() {
         const paginaAtiva = document.querySelector('.page-content:not(.hidden)')?.id;
         if (paginaAtiva === 'dashboard') {
             atualizarDashboards();
         } else if (paginaAtiva === 'relatorios') {
             carregarRelatorioCompleto();
-        } else if (paginaAtiva === 'analises') {
-            initAnalises();
         }
     }
     filtroAno.addEventListener('change', (e) => {
@@ -81,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         handleFilterChange();
     });
 
-    // --- FUNÇÕES DE CARREGAMENTO DE DADOS (DASHBOARD) ---
     async function carregarKpiMediaGeral(ano, regiao) {
         const el = document.getElementById('media-geral');
         if (!el) return;
@@ -89,9 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/api/desempenho/geral?ano=${ano}&regiao=${regiao}`);
             const data = await response.json();
             el.textContent = data.media_geral_premio.toFixed(2);
-        } catch (error) {
-            console.error('Erro KPI Média:', error);
-        }
+        } catch (error) { console.error('Erro KPI Média:', error); }
     }
 
     async function carregarKpiMelhoriaAnual(ano, regiao) {
@@ -103,9 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const valor = data.melhoria_percentual;
             el.textContent = `${valor >= 0 ? '+' : ''}${valor.toFixed(1)}%`;
             el.className = valor >= 0 ? 'positivo' : 'negativo';
-        } catch (error) {
-            console.error('Erro KPI Melhoria:', error);
-        }
+        } catch (error) { console.error('Erro KPI Melhoria:', error); }
     }
 
     async function carregarKpiBenchmark(ano, regiao) {
@@ -117,9 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const valor = data.diferenca_ideb;
             el.textContent = `${valor >= 0 ? '+' : ''}${valor.toFixed(2)}`;
             el.className = valor >= 0 ? 'positivo' : 'negativo';
-        } catch (error) {
-            console.error('Erro KPI Benchmark:', error);
-        }
+        } catch (error) { console.error('Erro KPI Benchmark:', error); }
     }
 
     async function carregarRankingEscolas(ano, regiao) {
@@ -139,9 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.innerHTML = `<td>${index + 1}º</td><td>${escola.nome}</td><td>${escola.pontuacao_premio.toFixed(2)}</td><td>${escola.regiao}</td>`;
                 tabelaBody.appendChild(row);
             });
-        } catch (error) {
-            console.error('Erro Ranking Escolas:', error);
-        }
+        } catch (error) { console.error('Erro Ranking Escolas:', error); }
     }
 
     async function carregarRankingAlunos(ano, regiao) {
@@ -165,9 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.innerHTML = `<td>${index + 1}º</td><td>${aluno.nome_anonimizado}</td><td>${aluno.nota_geral.toFixed(2)}</td><td>${nomeEscola}</td>`;
                 tabelaBody.appendChild(row);
             });
-        } catch (error) {
-            console.error('Erro Ranking Alunos:', error);
-        }
+        } catch (error) { console.error('Erro Ranking Alunos:', error); }
     }
 
     async function carregarGraficoRegioes(ano) {
@@ -177,9 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/api/desempenho/regioes?ano=${ano}`);
             const data = await response.json();
             const ctx = canvas.getContext('2d');
-
             if (chartInstance) chartInstance.destroy();
-
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -196,16 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    },
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } },
                     onClick: (event, elements) => {
                         if (elements.length > 0) {
                             const index = elements[0].index;
@@ -217,27 +191,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-        } catch (error) {
-            console.error('Erro Gráfico:', error);
-        }
+        } catch (error) { console.error('Erro Gráfico:', error); }
     }
 
-    // --- LÓGICA DA PÁGINA DE ANÁLISES ---
     async function initAnalises() {
         const selectEscolas = document.getElementById('analise-escolas-select');
         const compararBtn = document.getElementById('analise-comparar-btn');
         const anoSpan = document.getElementById('analise-ano-selecionado');
         const selectHistorico = document.getElementById('analise-historico-select');
         if (!selectEscolas) return;
-
+        
         anoSpan.textContent = estado.ano;
 
         const responseEscolas = await fetch(`/api/escolas?ano=${estado.ano}&regiao=Todas`);
         const todasEscolas = await responseEscolas.json();
-
+        
         selectEscolas.innerHTML = '';
         selectHistorico.innerHTML = '<option value="">Selecione uma escola</option>';
-
         todasEscolas.forEach(escola => {
             const option = document.createElement('option');
             option.value = escola.id;
@@ -253,9 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const response = await fetch(`/api/escolas/comparar?ano=${estado.ano}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(selectedIds)
             });
             const escolasParaComparar = await response.json();
@@ -271,57 +239,199 @@ document.addEventListener('DOMContentLoaded', () => {
 
         selectHistorico.onchange = async (event) => {
             const escolaId = event.target.value;
+            const kpiContainer = document.getElementById('jornada-kpi-grid');
+            const timelineContainer = document.getElementById('jornada-timeline-container');
+            
+            kpiContainer.innerHTML = '';
+            timelineContainer.innerHTML = '';
             if (historicoChartInstance) historicoChartInstance.destroy();
+            
             if (!escolaId) return;
 
-            const response = await fetch(`/api/escolas/${escolaId}/historico`);
-            const historicoData = await response.json();
-            const ctx = document.getElementById('historicoChart').getContext('2d');
+            try {
+                const responseHistorico = await fetch(`/api/escolas/${escolaId}/historico`);
+                const historicoData = await responseHistorico.json();
+                const ctx = document.getElementById('historicoChart').getContext('2d');
+                
+                historicoChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: historicoData.map(d => d.ano),
+                        datasets: [{
+                            label: 'Pontuação no Prêmio',
+                            data: historicoData.map(d => d.pontuacao),
+                            borderColor: 'var(--cor-principal)',
+                            backgroundColor: 'rgba(255, 103, 0, 0.1)',
+                            fill: true,
+                            tension: 0.2
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
 
-            historicoChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: historicoData.map(d => d.ano),
-                    datasets: [{
-                        label: 'Pontuação no Prêmio',
-                        data: historicoData.map(d => d.pontuacao),
-                        borderColor: 'var(--cor-principal)',
-                        backgroundColor: 'rgba(255, 103, 0, 0.1)',
-                        fill: true,
-                        tension: 0.2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
+                const responseJornada = await fetch(`/api/escolas/${escolaId}/jornada`);
+                const jornadaData = await responseJornada.json();
+                
+                const kpis = jornadaData.kpis;
+                kpiContainer.innerHTML = `
+                    <div class="kpi-card">
+                        <h2>Crescimento Total</h2>
+                        <p class="${kpis.crescimento_total_percentual >= 0 ? 'positivo' : 'negativo'}">
+                            ${kpis.crescimento_total_percentual >= 0 ? '+' : ''}${kpis.crescimento_total_percentual}%
+                        </p>
+                    </div>
+                    <div class="kpi-card">
+                        <h2>Melhor Desempenho</h2>
+                        <p>${kpis.melhor_pontuacao.toFixed(2)} <span style="font-size: 0.5em; color: var(--cor-texto-secundario)">(${kpis.melhor_ano})</span></p>
+                    </div>
+                    <div class="kpi-card">
+                        <h2>Alunos Destaque</h2>
+                        <p>${kpis.total_alunos_destaque}</p>
+                    </div>
+                `;
+
+                const historico = jornadaData.historico_jornada;
+                historico.reverse();
+                historico.forEach(ponto => {
+                    const timelineItem = document.createElement('div');
+                    timelineItem.className = 'timeline-item';
+                    const rankingText = ponto.ranking_regional ? `<strong>Ranking Regional:</strong> ${ponto.ranking_regional}º Lugar` : '<strong>Ranking Regional:</strong> N/A';
+                    timelineItem.innerHTML = `
+                        <h3>${ponto.ano}</h3>
+                        <p>
+                            <strong>Pontuação:</strong> ${ponto.pontuacao.toFixed(2)}<br>
+                            ${rankingText}
+                        </p>
+                    `;
+                    timelineContainer.appendChild(timelineItem);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar dados da jornada:", error);
+                kpiContainer.innerHTML = '<p>Não foi possível carregar os dados de impacto da escola.</p>';
+            }
         };
     }
 
-    // --- LÓGICA DA PÁGINA DE RELATÓRIOS ---
+    async function initImpacto() {
+        const selectEscolas = document.getElementById('impacto-escolas-select');
+        const selectAno = document.getElementById('impacto-ano-select');
+        const gerarBtn = document.getElementById('impacto-gerar-btn');
+        const resultadosContainer = document.getElementById('impacto-resultados-container');
+    
+        if (selectEscolas.options.length === 0) {
+            const responseEscolas = await fetch(`/api/escolas?ano=2025&regiao=Todas`);
+            const todasEscolas = await responseEscolas.json();
+            const nomesUnicos = [...new Set(todasEscolas.map(e => e.nome))];
+            
+            nomesUnicos.forEach(nome => {
+                const escolaRef = todasEscolas.find(e => e.nome === nome);
+                const option = document.createElement('option');
+                option.value = escolaRef.id;
+                option.textContent = nome;
+                selectEscolas.appendChild(option);
+            });
+        }
+    
+        gerarBtn.onclick = async () => {
+            const selectedOptions = Array.from(selectEscolas.selectedOptions);
+            if (selectedOptions.length === 0) {
+                return alert("Por favor, selecione pelo menos uma escola.");
+            }
+            
+            const escolaIds = selectedOptions.map(opt => parseInt(opt.value));
+            const anoDepois = parseInt(selectAno.value);
+            
+            resultadosContainer.classList.remove('hidden');
+            
+            const payload = {
+                escola_ids: escolaIds,
+                ano_depois: anoDepois,
+                ano_antes: 2020
+            };
+    
+            try {
+                const response = await fetch('/api/impacto', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+    
+                renderImpactoEscolasChart(data.escolas, anoDepois);
+                renderImpactoAlunosChart(data.alunos, anoDepois);
+            } catch (error) {
+                console.error("Erro ao gerar análise de impacto:", error);
+                document.getElementById('impacto-escolas-chart-container').innerHTML = "<p>Erro ao carregar dados.</p>";
+                document.getElementById('impacto-alunos-chart-container').innerHTML = "<p>Erro ao carregar dados.</p>";
+            }
+        };
+    }
+    
+    function renderImpactoEscolasChart(data, anoDepois) {
+        const ctx = document.getElementById('impactoEscolasChart').getContext('2d');
+        if (impactoEscolasChartInstance) impactoEscolasChartInstance.destroy();
+    
+        impactoEscolasChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(e => e.nome_escola),
+                datasets: [
+                    {
+                        label: 'Desempenho em 2020 ("Antes")',
+                        data: data.map(e => e.pontuacao_antes),
+                        backgroundColor: 'rgba(132, 146, 166, 0.7)',
+                    },
+                    {
+                        label: `Desempenho em ${anoDepois} ("Depois")`,
+                        data: data.map(e => e.pontuacao_depois),
+                        backgroundColor: 'rgba(255, 103, 0, 0.7)',
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, suggestedMax: 10 } } }
+        });
+    }
+    
+    function renderImpactoAlunosChart(data, anoDepois) {
+        const ctx = document.getElementById('impactoAlunosChart').getContext('2d');
+        if (impactoAlunosChartInstance) impactoAlunosChartInstance.destroy();
+    
+        impactoAlunosChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Média Geral dos Alunos'],
+                datasets: [
+                    {
+                        label: 'Média em 2020 ("Antes")',
+                        data: [data.media_alunos_antes],
+                        backgroundColor: 'rgba(132, 146, 166, 0.7)'
+                    },
+                    {
+                        label: `Média em ${anoDepois} ("Depois")`,
+                        data: [data.media_alunos_depois],
+                        backgroundColor: 'rgba(255, 103, 0, 0.7)'
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+        });
+    }
+
     let dadosRelatorio = [];
     async function carregarRelatorioCompleto() {
         const tabelaBody = document.getElementById('relatorio-body');
         if (!tabelaBody) return;
         tabelaBody.innerHTML = '<tr><td colspan="6">Carregando...</td></tr>';
-
         const response = await fetch(`/api/escolas?ano=${estado.ano}&regiao=${estado.regiao}`);
         dadosRelatorio = await response.json();
-
         tabelaBody.innerHTML = '';
         if (dadosRelatorio.length === 0) {
             tabelaBody.innerHTML = '<tr><td colspan="6">Nenhum dado encontrado para esta seleção.</td></tr>';
             return;
         }
-
         dadosRelatorio.forEach(escola => {
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${escola.id}</td><td>${escola.nome}</td><td>${escola.regiao}</td>
-                <td>${escola.ano}</td><td>${escola.pontuacao_premio.toFixed(2)}</td>
-                <td>${escola.ideb_publico.toFixed(2)}</td>
-            `;
+            row.innerHTML = `<td>${escola.id}</td><td>${escola.nome}</td><td>${escola.regiao}</td><td>${escola.ano}</td><td>${escola.pontuacao_premio.toFixed(2)}</td><td>${escola.ideb_publico.toFixed(2)}</td>`;
             tabelaBody.appendChild(row);
         });
     }
@@ -335,11 +445,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const values = [escola.id, nomeFormatado, escola.regiao, escola.ano, escola.pontuacao_premio, escola.ideb_publico];
             csvRows.push(values.join(','));
         });
-
         const csvString = csvRows.join('\n');
-        const blob = new Blob([csvString], {
-            type: 'text/csv;charset=utf-8;'
-        });
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.setAttribute('href', url);
@@ -350,11 +457,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     document.getElementById('export-csv-btn')?.addEventListener('click', exportarParaCSV);
 
-    // --- LÓGICA DA PÁGINA DE CONFIGURAÇÕES ---
     function initConfiguracoes() {
         const themeToggle = document.getElementById('theme-toggle');
         if (!themeToggle) return;
-
         if (!themeToggle.getAttribute('listener')) {
             themeToggle.setAttribute('listener', 'true');
             themeToggle.addEventListener('change', () => {
@@ -364,7 +469,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- FUNÇÕES DE INICIALIZAÇÃO E POPULAÇÃO ---
     function popularFiltroRegioes() {
         const regioes = ["Nordeste", "Sudeste", "Sul", "Norte", "Centro-Oeste"];
         const filtroRegiaoSelect = document.getElementById('filtro-regiao');
@@ -387,29 +491,24 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.remove('dark-mode');
             if (themeToggle) themeToggle.checked = false;
         }
-
         initConfiguracoes();
         popularFiltroRegioes();
         showPage('dashboard');
     }
 
-    // Inicializa a aplicação
     initApp();
 
-    // --- LÓGICA DO MENU HAMBURGER ---
     function initMobileMenu() {
         const sidebar = document.getElementById('sidebar');
         const hamburgerBtn = document.getElementById('hamburger-btn');
         const overlay = document.getElementById('overlay');
         const mobileHeader = document.getElementById('mobile-header');
         const sidebarLinks = document.querySelectorAll('.sidebar-link');
-
         const closeMenu = () => {
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
             mobileHeader.classList.remove('is-hidden');
         };
-
         if (hamburgerBtn) {
             hamburgerBtn.addEventListener('click', () => {
                 sidebar.classList.toggle('open');
@@ -417,16 +516,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 mobileHeader.classList.toggle('is-hidden');
             });
         }
-
         if (overlay) {
             overlay.addEventListener('click', closeMenu);
         }
-
         sidebarLinks.forEach(link => {
             link.addEventListener('click', closeMenu);
         });
     }
 
-    // Chama a nova função
     initMobileMenu();
 });

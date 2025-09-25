@@ -27,6 +27,7 @@
                 <li><a href="#dashboard" class="sidebar-link active"><i class="ph-fill ph-gauge"></i><span>Dashboard</span></a></li>
                 <li><a href="#analises" class="sidebar-link"><i class="ph-fill ph-chart-bar"></i><span>Análises</span></a></li>
                 <li><a href="#relatorios" class="sidebar-link"><i class="ph-fill ph-file-text"></i><span>Relatórios</span></a></li>
+                <li><a href="#impacto" class="sidebar-link"><i class="ph-fill ph-chart-line-up"></i><span>Impacto</span></a></li>
                 <li><a href="#configuracoes" class="sidebar-link"><i class="ph-fill ph-gear"></i><span>Configurações</span></a></li>
             </ul>
         </nav>
@@ -142,14 +143,13 @@
                     <div class="chart-container">
                         <canvas id="historicoChart"></canvas>
                     </div>
-
                     <div id="jornada-kpi-grid" class="kpi-grid" style="margin-top: 25px;"></div>
                     <div id="jornada-timeline-container" class="timeline-container"></div>
                 </section>
             </div>
             
             <div id="relatorios" class="page-content hidden">
-                <header class="main-header">
+                 <header class="main-header">
                     <h1>Relatórios e Exportação</h1>
                 </header>
                 <section class="ranking-container">
@@ -174,6 +174,58 @@
                     </div>
                 </section>
             </div>
+
+            <div id="impacto" class="page-content hidden">
+                <header class="main-header">
+                    <h1>Análise de Impacto (Antes e Depois)</h1>
+                    <p>Compare o desempenho das escolas em 2020 (base) com um ano subsequente.</p>
+                </header>
+                <section class="analysis-container">
+                    <h2>Filtros da Análise</h2>
+                    <div class="filtros-container">
+                        <div class="filtro-item" style="flex-grow: 1;">
+                            <label for="impacto-escolas-select">Selecione uma ou mais escolas</label>
+                            <select id="impacto-escolas-select" multiple></select>
+                        </div>
+                        <div class="filtro-item">
+                            <label for="impacto-ano-select">Selecione o ano ("Depois")</label>
+                            <select id="impacto-ano-select">
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025" selected>2025</option>
+                            </select>
+                        </div>
+                        <div class="comparison-action" style="align-self: flex-end;">
+                            <button id="impacto-gerar-btn" class="cta-button">Gerar Análise</button>
+                        </div>
+                    </div>
+                </section>
+                <section id="impacto-resultados-container" class="hidden">
+                    <div class="analysis-container">
+                        <h2>Impacto nas Escolas</h2>
+                        <div class="chart-container">
+                            <canvas id="impactoEscolasChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="dashboard-grid" style="margin-top: 25px;">
+                        <div class="analysis-container">
+                            <h2>Impacto nos Alunos</h2>
+                            <div class="chart-container">
+                                <canvas id="impactoAlunosChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="analysis-container">
+                            <h2>Impacto nos Professores</h2>
+                            <div class="chart-container" style="display: flex; align-items: center; justify-content: center; color: var(--cor-texto-secundario);">
+                                <p>(Dados de professores ainda não disponíveis para análise)</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
             <div id="configuracoes" class="page-content hidden">
                  <header class="main-header">
                     <h1>Configurações</h1>

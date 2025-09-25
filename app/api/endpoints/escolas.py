@@ -45,3 +45,12 @@ def get_jornada_escola(escola_id: int, db: Session = Depends(deps.get_db)):
     if not jornada_data:
         raise HTTPException(status_code=404, detail="Dados da jornada não encontrados para a escola")
     return jornada_data
+
+@router.post("/impacto", response_model=premio.ImpactoEscolasResponse, tags=["Impacto"])
+def get_analise_de_impacto(payload: premio.ImpactoRequest, db: Session = Depends(deps.get_db)):
+    return premio_service.calcular_impacto_escolas_e_alunos(
+        db=db, 
+        escola_ids=payload.escola_ids, 
+        ano_antes=payload.ano_antes, 
+        ano_depois=payload.ano_depois
+    )
